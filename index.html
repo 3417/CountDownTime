@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科幻倒计时</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: #0a0e17;
+            color: #e0e0ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 粒子背景 */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0ff;
+            margin-bottom: 2rem;
+        }
+
+        .input-section {
+            background: rgba(16, 22, 36, 0.8);
+            border: 1px solid #2a3a5a;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 3rem;
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #80d0ff;
+        }
+
+        input[type="datetime-local"] {
+            background: rgba(10, 20, 40, 0.7);
+            border: 1px solid #3a5a8a;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            color: #e0e0ff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="datetime-local"]:focus {
+            border-color: #00aaff;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+
+        button {
+            background: linear-gradient(90deg, #00aaff, #7700ff);
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 170, 255, 0.4);
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .time-unit {
+            background: rgba(16, 22, 36, 0.8);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 150, 255, 0.2);
+            border: 1px solid #2a3a5a;
+            transition: all 0.3s ease;
+        }
+
+        .time-unit:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 200, 255, 0.4);
+        }
+
+        .time-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+        }
+
+        .time-label {
+            font-size: 1rem;
+            color: #a0a0ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .message {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            text-align: center;
+            color: #ff66cc;
+            text-shadow: 0 0 10px rgba(255, 102, 204, 0.5);
+            min-height: 2rem;
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #6080a0;
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .input-section {
+                padding: 1.5rem;
+            }
+            
+            .time-unit {
+                min-width: 100px;
+                padding: 1rem;
+            }
+            
+            .time-value {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .countdown-display {
+                gap: 1rem;
+            }
+            
+            .time-unit {
+                min-width: 80px;
+                padding: 0.8rem;
+            }
+            
+            .time-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <div class="container">
+        <header>
+            <h1>未来倒计时</h1>
+            <p class="subtitle">输入目标时间，开启倒计时旅程</p>
+        </header>
+        
+        <section class="input-section">
+            <div class="input-group">
+                <label for="target-date">选择目标日期与时间：</label>
+                <input type="datetime-local" id="target-date">
+            </div>
+            <button id="start-countdown">启动倒计时</button>
+        </section>
+        
+        <div class="countdown-display">
+            <div class="time-unit">
+                <div class="time-value" id="days">00</div>
+                <div class="time-label">天</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="hours">00</div>
+                <div class="time-label">小时</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="minutes">00</div>
+                <div class="time-label">分钟</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="seconds">00</div>
+                <div class="time-label">秒</div>
+            </div>
+        </div>
+        
+        <div class="message" id="message"></div>
+        
+        <footer>
+            <p>科幻倒计时系统 © 2023 | 设计用于未来时间追踪</p>
+        </footer>
+    </div>
+
+    <!-- 引入粒子效果库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // 初始化粒子背景
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#00ffff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#7700ff",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    }
+                },
+                retina_detect: true
+            });
+            
+            // 设置默认目标时间为明天
+            const tomorrow = new Date('2026-02-01');
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            
+            // 格式化日期时间字符串
+            const year = tomorrow.getFullYear();
+            const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+            const day = String(tomorrow.getDate()).padStart(2, '0');
+            const hours = String(tomorrow.getHours()).padStart(2, '0');
+            const minutes = String(tomorrow.getMinutes()).padStart(2, '0');
+            
+            document.getElementById('target-date').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            
+            // 启动默认倒计时
+            startCountdown();
+        });
+
+        // 倒计时功能
+        let countdownInterval;
+
+        function startCountdown() {
+            clearInterval(countdownInterval);
+            
+            const targetDateInput = document.getElementById('target-date').value;
+            if (!targetDateInput) {
+                document.getElementById('message').textContent = '请选择目标日期和时间！';
+                return;
+            }
+            
+            const targetDate = new Date(targetDateInput).getTime();
+            
+            countdownInterval = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
+                    document.getElementById('message').textContent = '倒计时结束！目标时间已到达！';
+                    return;
+                }
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById('days').textContent = String(days).padStart(2, '0');
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+                
+                // 更新消息
+                if (days === 0 && hours === 0 && minutes < 10) {
+                    document.getElementById('message').textContent = '即将到达目标时间！';
+                } else if (days > 30) {
+                    document.getElementById('message').textContent = '距离目标还有一段时间...';
+                } else if (days > 7) {
+                    document.getElementById('message').textContent = '目标正在接近中...';
+                } else if (days > 1) {
+                    document.getElementById('message').textContent = '目标即将到来！';
+                } else {
+                    document.getElementById('message').textContent = '目标近在眼前！';
+                }
+            }, 1000);
+        }
+
+        // 添加事件监听器
+        document.getElementById('start-countdown').addEventListener('click', startCountdown);
+    </script>
+</body>
+</html>
